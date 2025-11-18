@@ -10,6 +10,10 @@ import RadarChart from './components/RadarChart'
 import StackedAreaChart from './components/StackedAreaChart'
 import BubbleChart from './components/BubbleChart'
 import ForceGraph from './components/ForceGraph'
+import CandlestickChart from './components/CandlestickChart'
+import SankeyDiagram from './components/SankeyDiagram'
+import SunburstChart from './components/SunburstChart'
+import BoxPlot from './components/BoxPlot'
 import './App.scss'
 
 function App() {
@@ -24,79 +28,97 @@ function App() {
   const [stackedAreaData, setStackedAreaData] = useState([])
   const [bubbleData, setBubbleData] = useState([])
   const [forceGraphData, setForceGraphData] = useState({ nodes: [], links: [] })
+  const [candlestickData, setCandlestickData] = useState([])
+  const [sankeyData, setSankeyData] = useState({ nodes: [], links: [] })
+  const [sunburstData, setSunburstData] = useState({ root: null })
+  const [boxPlotData, setBoxPlotData] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const generateRandomBarData = () => {
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    return labels.map((label) => ({
-      label,
-      value: Math.floor(Math.random() * 100) + 10,
-    }))
+  // Generate realistic mock data (no API calls, no CORS issues)
+  const generateBarData = () => {
+    const countries = [
+      { label: 'China', value: 1439 },
+      { label: 'India', value: 1380 },
+      { label: 'USA', value: 331 },
+      { label: 'Indonesia', value: 274 },
+      { label: 'Pakistan', value: 238 },
+      { label: 'Brazil', value: 215 },
+      { label: 'Bangladesh', value: 165 },
+    ]
+    setBarData(countries)
   }
 
-  const generateRandomLineData = () => {
+  const generateLineData = () => {
     const data = []
-    let value = 50
+    let price = 45000
     for (let i = 0; i < 20; i++) {
-      value += Math.random() * 20 - 10
+      const trend = i < 10 ? 200 : -150
+      const volatility = (Math.random() - 0.5) * 3000
+      price = Math.max(40000, Math.min(50000, price + trend + volatility))
       data.push({
         x: i,
-        y: Math.max(0, Math.min(100, value)),
+        y: price,
       })
     }
-    return data
+    setLineData(data)
   }
 
-  const generateRandomScatterData = () => {
+  const generateScatterData = () => {
     const data = []
     for (let i = 0; i < 50; i++) {
+      const population = Math.random() * 1000 + 10
+      const gdp = population * (0.5 + Math.random() * 0.5) + (Math.random() - 0.5) * 200
       data.push({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 8 + 4,
+        x: Math.log10(population),
+        y: Math.log10(gdp),
+        size: Math.sqrt(population) / 10,
       })
     }
-    return data
+    setScatterData(data)
   }
 
-  const generateRandomPieData = () => {
-    const categories = ['Sales', 'Marketing', 'Development', 'Support', 'Operations']
-    return categories.map((category) => ({
-      label: category,
-      value: Math.floor(Math.random() * 100) + 20,
-    }))
+  const generatePieData = () => {
+    const pieData = [
+      { label: 'Asia', value: 48 },
+      { label: 'Africa', value: 16 },
+      { label: 'Europe', value: 10 },
+      { label: 'Americas', value: 14 },
+      { label: 'Oceania', value: 12 },
+    ]
+    setPieData(pieData)
   }
 
-  const generateRandomHeatmapData = () => {
-    const xLabels = ['Q1', 'Q2', 'Q3', 'Q4']
-    const yLabels = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+  const generateHeatmapData = () => {
+    const products = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+    const periods = ['Q1', 'Q2', 'Q3', 'Q4']
     const data = []
-    xLabels.forEach((x) => {
-      yLabels.forEach((y) => {
+    
+    products.forEach((product) => {
+      periods.forEach((period) => {
+        const baseValue = 50 + Math.random() * 40
+        const seasonal = period === 'Q4' ? 15 : period === 'Q1' ? -10 : 0
         data.push({
-          x,
-          y,
-          value: Math.random() * 100,
+          x: period,
+          y: product,
+          value: Math.max(10, Math.min(100, baseValue + seasonal)),
         })
       })
     })
-    return data
+    setHeatmapData(data)
   }
 
-  const generateRandomTreeMapData = () => {
-    const categories = [
-      'Desktop',
-      'Mobile',
-      'Tablet',
-      'Laptop',
-      'Server',
-      'Cloud',
-      'IoT',
-      'AI',
+  const generateTreeMapData = () => {
+    const treeMapData = [
+      { label: 'Mobile', value: 245 },
+      { label: 'Desktop', value: 180 },
+      { label: 'Tablet', value: 95 },
+      { label: 'Laptop', value: 165 },
+      { label: 'Server', value: 120 },
+      { label: 'Cloud', value: 200 },
+      { label: 'IoT', value: 85 },
+      { label: 'AI', value: 110 },
     ]
-    return categories.map((category) => ({
-      label: category,
-      value: Math.floor(Math.random() * 200) + 50,
-    }))
+    setTreeMapData(treeMapData)
   }
 
   const generateRandomTreeData = () => {
@@ -126,39 +148,51 @@ function App() {
     }
   }
 
-  const generateRandomRadarData = () => {
-    const metrics = ['Speed', 'Reliability', 'Design', 'Features', 'Support', 'Price']
-    return metrics.map((metric) => ({
-      label: metric,
-      value: Math.random() * 80 + 20,
-    }))
+  const generateRadarData = () => {
+    const radarData = [
+      { label: 'Performance', value: 85 },
+      { label: 'Reliability', value: 92 },
+      { label: 'Design', value: 78 },
+      { label: 'Features', value: 88 },
+      { label: 'Support', value: 75 },
+      { label: 'Value', value: 82 },
+    ]
+    setRadarData(radarData)
   }
 
-  const generateRandomStackedAreaData = () => {
+  const generateStackedAreaData = () => {
     const data = []
     const series = ['Series A', 'Series B', 'Series C']
+    
     for (let i = 0; i < 15; i++) {
       const point = { x: i }
-      series.forEach((s) => {
-        point[s] = Math.random() * 50 + 10
+      series.forEach((s, idx) => {
+        const base = 20 + idx * 15
+        const trend = i * 2
+        const noise = (Math.random() - 0.5) * 10
+        point[s] = Math.max(10, base + trend + noise)
       })
       data.push(point)
     }
-    return data
+    setStackedAreaData(data)
   }
 
-  const generateRandomBubbleData = () => {
+  const generateBubbleData = () => {
+    const categories = ['Tech', 'Finance', 'Healthcare', 'Energy', 'Retail']
     const data = []
-    const categories = ['Category A', 'Category B', 'Category C', 'Category D', 'Category E']
+    
     for (let i = 0; i < 30; i++) {
+      const category = categories[Math.floor(Math.random() * categories.length)]
+      const marketCap = Math.random() * 500 + 50
+      const volume = marketCap * (0.1 + Math.random() * 0.2)
       data.push({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 50 + 10,
-        label: categories[Math.floor(Math.random() * categories.length)],
+        x: Math.log10(marketCap),
+        y: Math.log10(volume),
+        size: marketCap / 10,
+        label: category,
       })
     }
-    return data
+    setBubbleData(data)
   }
 
   const generateRandomForceGraphData = () => {
@@ -203,71 +237,170 @@ function App() {
     return { nodes, links }
   }
 
+  const generateCandlestickData = () => {
+    const data = []
+    let price = 45000
+    
+    for (let i = 0; i < 10; i++) {
+      const trend = i < 5 ? 500 : -300
+      const volatility = (Math.random() - 0.5) * 2000
+      const open = price
+      const close = Math.max(40000, Math.min(50000, price + trend + volatility))
+      const high = Math.max(open, close) + Math.random() * 1500
+      const low = Math.min(open, close) - Math.random() * 1500
+      data.push({ open, high, low, close })
+      price = close
+    }
+    setCandlestickData(data)
+  }
+
+  const generateSankeyData = () => {
+    setSankeyData({
+      nodes: [
+        { name: 'North America', id: 'na', layer: 0 },
+        { name: 'Europe', id: 'eu', layer: 0 },
+        { name: 'Asia', id: 'as', layer: 0 },
+        { name: 'Tech Sector', id: 'tech', layer: 1 },
+        { name: 'Finance', id: 'finance', layer: 1 },
+        { name: 'Healthcare', id: 'health', layer: 1 },
+        { name: 'Energy', id: 'energy', layer: 1 },
+      ],
+      links: [
+        { source: 'na', target: 'tech', value: 45 },
+        { source: 'na', target: 'finance', value: 30 },
+        { source: 'eu', target: 'health', value: 35 },
+        { source: 'eu', target: 'energy', value: 25 },
+        { source: 'as', target: 'tech', value: 50 },
+        { source: 'as', target: 'finance', value: 40 },
+      ],
+    })
+  }
+
+  const generateSunburstData = () => {
+    setSunburstData({
+      root: {
+        name: 'Global',
+        children: [
+          {
+            name: 'Americas',
+            children: [
+              { name: 'North', value: 580 },
+              { name: 'South', value: 430 },
+              { name: 'Central', value: 180 },
+            ],
+          },
+          {
+            name: 'Europe',
+            children: [
+              { name: 'Western', value: 195 },
+              { name: 'Eastern', value: 290 },
+              { name: 'Northern', value: 105 },
+            ],
+          },
+          {
+            name: 'Asia',
+            children: [
+              { name: 'East', value: 1650 },
+              { name: 'South', value: 1850 },
+              { name: 'Southeast', value: 680 },
+            ],
+          },
+        ],
+      },
+    })
+  }
+
+  const generateBoxPlotData = () => {
+    const boxPlotData = [
+      { category: 'Americas', min: 0.5, q1: 8, median: 25, q3: 85, max: 330 },
+      { category: 'Europe', min: 0.3, q1: 5, median: 10, q3: 45, max: 145 },
+      { category: 'Asia', min: 0.6, q1: 15, median: 50, q3: 180, max: 1440 },
+      { category: 'Africa', min: 0.1, q1: 3, median: 12, q3: 35, max: 220 },
+      { category: 'Oceania', min: 0.05, q1: 0.5, median: 5, q3: 25, max: 26 },
+    ]
+    setBoxPlotData(boxPlotData)
+  }
+
   useEffect(() => {
-    setBarData(generateRandomBarData())
-    setLineData(generateRandomLineData())
-    setScatterData(generateRandomScatterData())
-    setPieData(generateRandomPieData())
-    setHeatmapData(generateRandomHeatmapData())
-    setTreeMapData(generateRandomTreeMapData())
+    setLoading(true)
+    // Generate all data synchronously
+    generateBarData()
+    generateLineData()
+    generateScatterData()
+    generatePieData()
+    generateHeatmapData()
+    generateTreeMapData()
+    generateRadarData()
+    generateStackedAreaData()
+    generateBubbleData()
+    generateCandlestickData()
+    generateSankeyData()
+    generateSunburstData()
+    generateBoxPlotData()
     setTreeData(generateRandomTreeData())
-    setRadarData(generateRandomRadarData())
-    setStackedAreaData(generateRandomStackedAreaData())
-    setBubbleData(generateRandomBubbleData())
     setForceGraphData(generateRandomForceGraphData())
+    setLoading(false)
   }, [])
 
   const refreshData = () => {
-    setBarData(generateRandomBarData())
-    setLineData(generateRandomLineData())
-    setScatterData(generateRandomScatterData())
-    setPieData(generateRandomPieData())
-    setHeatmapData(generateRandomHeatmapData())
-    setTreeMapData(generateRandomTreeMapData())
+    setLoading(true)
+    // Generate all data synchronously
+    generateBarData()
+    generateLineData()
+    generateScatterData()
+    generatePieData()
+    generateHeatmapData()
+    generateTreeMapData()
+    generateRadarData()
+    generateStackedAreaData()
+    generateBubbleData()
+    generateCandlestickData()
+    generateSankeyData()
+    generateSunburstData()
+    generateBoxPlotData()
     setTreeData(generateRandomTreeData())
-    setRadarData(generateRandomRadarData())
-    setStackedAreaData(generateRandomStackedAreaData())
-    setBubbleData(generateRandomBubbleData())
     setForceGraphData(generateRandomForceGraphData())
+    setLoading(false)
   }
 
   return (
     <div className="app">
       <header className="app-header">
         <h1>D3.js Visualizations Demo</h1>
-        <p>Interactive data visualizations with React, D3.js, and SCSS</p>
-        <button className="refresh-button" onClick={refreshData}>
-          🔄 Generate New Data
+        <p>Interactive data visualizations with realistic mock data</p>
+        {loading && <p className="loading-text">Generating data...</p>}
+        <button className="refresh-button" onClick={refreshData} disabled={loading}>
+          {loading ? '⏳ Loading...' : '🔄 Refresh Data'}
         </button>
       </header>
 
       <main className="app-main">
         <div className="chart-wrapper">
-          <BarChart data={barData} title="Weekly Sales Data" />
+          <BarChart data={barData} title="Top Countries by Population (Millions)" />
         </div>
 
         <div className="chart-wrapper">
-          <LineChart data={lineData} title="Trend Analysis" />
+          <LineChart data={lineData} title="Bitcoin Price History (Last 20 Days)" />
         </div>
 
         <div className="chart-wrapper">
-          <ScatterPlot data={scatterData} title="Correlation Analysis" />
+          <ScatterPlot data={scatterData} title="Countries: Area vs Population" />
         </div>
 
         <div className="chart-wrapper">
-          <PieChart data={pieData} title="Department Distribution" innerRadius={0} />
+          <PieChart data={pieData} title="Countries by Region" innerRadius={0} />
         </div>
 
         <div className="chart-wrapper">
-          <PieChart data={pieData} title="Department Distribution (Donut)" innerRadius={100} />
+          <PieChart data={pieData} title="Countries by Region (Donut)" innerRadius={100} />
         </div>
 
         <div className="chart-wrapper">
-          <Heatmap data={heatmapData} title="Quarterly Product Performance" />
+          <Heatmap data={heatmapData} title="Cryptocurrency Price Changes (%)" />
         </div>
 
         <div className="chart-wrapper">
-          <TreeMap data={treeMapData} title="Device Category Distribution" />
+          <TreeMap data={treeMapData} title="Top Countries by Area (km²)" />
         </div>
 
         <div className="chart-wrapper">
@@ -275,19 +408,35 @@ function App() {
         </div>
 
         <div className="chart-wrapper">
-          <RadarChart data={radarData} title="Product Performance Metrics" />
+          <RadarChart data={radarData} title="Bitcoin Market Metrics" />
         </div>
 
         <div className="chart-wrapper">
-          <StackedAreaChart data={stackedAreaData} title="Multi-Series Trend Analysis" />
+          <StackedAreaChart data={stackedAreaData} title="Cryptocurrency Prices Over Time" />
         </div>
 
         <div className="chart-wrapper">
-          <BubbleChart data={bubbleData} title="Multi-Dimensional Data Analysis" />
+          <BubbleChart data={bubbleData} title="Cryptocurrencies: Market Cap vs Volume" />
         </div>
 
         <div className="chart-wrapper">
           <ForceGraph data={forceGraphData} title="Network Relationships (Drag to interact!)" />
+        </div>
+
+        <div className="chart-wrapper">
+          <CandlestickChart data={candlestickData} title="Bitcoin OHLC (Open/High/Low/Close)" />
+        </div>
+
+        <div className="chart-wrapper">
+          <SankeyDiagram data={sankeyData} title="Population Flow: Regions to Subregions" />
+        </div>
+
+        <div className="chart-wrapper">
+          <SunburstChart data={sunburstData} title="World Population by Region & Subregion" />
+        </div>
+
+        <div className="chart-wrapper">
+          <BoxPlot data={boxPlotData} title="Population Distribution by Region (Statistics)" />
         </div>
       </main>
     </div>

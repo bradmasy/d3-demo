@@ -4,18 +4,23 @@ A React + Vite project showcasing D3.js data visualizations with SCSS styling.
 
 ## Features
 
-### Chart Types
-- **Bar Chart**: Weekly sales data visualization with animated bars
-- **Line Chart**: Trend analysis with smooth curves and area fill
-- **Scatter Plot**: Correlation analysis with interactive points
-- **Pie Chart**: Department distribution visualization
-- **Donut Chart**: Alternative pie chart style with center hole
-- **Heatmap**: Color-coded grid showing density and intensity values
-- **Tree Map**: Hierarchical rectangles showing proportional relationships
-- **Radar Chart**: Multi-axis comparison with polar coordinates
-- **Stacked Area Chart**: Multiple time series stacked on top of each other
-- **Bubble Chart**: Scatter plot with size-encoded third dimension
-- **Force-Directed Graph**: Interactive network visualization with drag-and-drop
+### Chart Types (with Realistic Mock Data)
+- **Bar Chart**: Top countries by population (realistic data)
+- **Line Chart**: Stock price trend with volatility (realistic simulation)
+- **Scatter Plot**: GDP vs Population correlation (realistic correlation patterns)
+- **Pie Chart**: Market share by region (realistic distribution)
+- **Donut Chart**: Market share by region (alternative style)
+- **Heatmap**: Product performance across quarters (realistic seasonal patterns)
+- **Tree Map**: Market segments distribution (realistic market data)
+- **Radar Chart**: Product performance metrics (realistic multi-dimensional data)
+- **Stacked Area Chart**: Multi-series trends over time (realistic correlated trends)
+- **Bubble Chart**: Market Cap vs Volume correlation (realistic market data)
+- **Candlestick Chart**: OHLC price data (realistic financial patterns)
+- **Sankey Diagram**: Flow visualization (realistic flow data)
+- **Sunburst Chart**: Hierarchical data visualization (realistic hierarchical structure)
+- **Box Plot**: Statistical distributions (realistic statistical data)
+- **Force-Directed Graph**: Interactive network visualization (generated)
+- **Tree Diagram**: Hierarchical tree structure (generated)
 
 ### Interactive Features
 - **Tooltips**: Hover over any chart element to see detailed information
@@ -24,7 +29,11 @@ A React + Vite project showcasing D3.js data visualizations with SCSS styling.
 - **Hover Effects**: Interactive feedback on all chart elements
 - **Responsive Design**: Works beautifully on all screen sizes
 
-All visualizations use randomly generated data that can be refreshed with a button click.
+All visualizations use **realistic mock data** that simulates real-world patterns:
+- No CORS issues - all data is generated locally
+- Realistic patterns - data follows real-world correlations and trends
+- Fast loading - no external API dependencies
+- Refreshes instantly - click the button to generate new data sets
 
 ## Tech Stack
 
