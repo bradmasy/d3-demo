@@ -1,0 +1,25 @@
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+
+  svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .circle {
+    transition: r 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      r: 8;
+      opacity: 1;
+    }
+  }
+}
+
+
+
