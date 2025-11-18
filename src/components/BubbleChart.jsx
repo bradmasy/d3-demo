@@ -138,9 +138,11 @@ const BubbleChart = ({ data, title }) => {
           .attr('opacity', 1)
           .attr('stroke-width', 3)
         tooltip.transition().duration(200).style('opacity', 1)
+        const marketCap = Math.pow(10, d.x).toFixed(1)
+        const volume = Math.pow(10, d.y).toFixed(2)
         tooltip
           .html(
-            `<strong>${d.label || 'Point'}</strong><br/>X: ${d.x.toFixed(2)}<br/>Y: ${d.y.toFixed(2)}<br/>Size: ${d.size.toFixed(2)}`
+            `<strong>${d.name || d.label || 'Cryptocurrency'}</strong><br/>Category: ${d.label || 'N/A'}<br/>Market Cap: $${marketCap}B<br/>Volume: $${volume}B`
           )
           .style('left', event.pageX + 10 + 'px')
           .style('top', event.pageY - 10 + 'px')
@@ -181,7 +183,7 @@ const BubbleChart = ({ data, title }) => {
       .style('text-anchor', 'middle')
       .style('font-size', '14px')
       .style('fill', '#333')
-      .text('Y Value')
+      .text('Trading Volume (log₁₀, $B)')
 
     // X axis label
     svg
@@ -191,7 +193,7 @@ const BubbleChart = ({ data, title }) => {
       .style('text-anchor', 'middle')
       .style('font-size', '14px')
       .style('fill', '#333')
-      .text('X Value')
+      .text('Market Cap (log₁₀, $B)')
 
     // Title
     svg

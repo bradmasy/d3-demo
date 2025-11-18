@@ -34,7 +34,6 @@ function App() {
   const [boxPlotData, setBoxPlotData] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Generate realistic mock data (no API calls, no CORS issues)
   const generateBarData = () => {
     const countries = [
       { label: 'China', value: 1439 },
@@ -108,16 +107,29 @@ function App() {
   }
 
   const generateTreeMapData = () => {
-    const treeMapData = [
-      { label: 'Mobile', value: 245 },
-      { label: 'Desktop', value: 180 },
-      { label: 'Tablet', value: 95 },
-      { label: 'Laptop', value: 165 },
-      { label: 'Server', value: 120 },
-      { label: 'Cloud', value: 200 },
-      { label: 'IoT', value: 85 },
-      { label: 'AI', value: 110 },
+
+    const osData = [
+      { label: 'Windows', value: 1250 },
+      { label: 'macOS', value: 380 },
+      { label: 'Linux', value: 220 },
+      { label: 'Chrome OS', value: 150 },
     ]
+    
+    const mobileData = [
+      { label: 'Android', value: 1850 },
+      { label: 'iOS', value: 920 },
+      { label: 'Other Mobile', value: 80 },
+    ]
+    
+    const browserData = [
+      { label: 'Chrome', value: 2100 },
+      { label: 'Safari', value: 680 },
+      { label: 'Edge', value: 420 },
+      { label: 'Firefox', value: 180 },
+      { label: 'Other Browsers', value: 120 },
+    ]
+    
+    const treeMapData = [...osData, ...mobileData, ...browserData]
     setTreeMapData(treeMapData)
   }
 
@@ -149,13 +161,20 @@ function App() {
   }
 
   const generateRadarData = () => {
+    const adoption = 88
+    const liquidity = adoption * 0.95
+    const marketCap = adoption * 0.92
+    const security = 95
+    const decentralization = 92
+    const regulatoryClarity = 65
+    
     const radarData = [
-      { label: 'Performance', value: 85 },
-      { label: 'Reliability', value: 92 },
-      { label: 'Design', value: 78 },
-      { label: 'Features', value: 88 },
-      { label: 'Support', value: 75 },
-      { label: 'Value', value: 82 },
+      { label: 'Adoption', value: adoption },
+      { label: 'Liquidity', value: Math.round(liquidity) },
+      { label: 'Market Cap', value: Math.round(marketCap) },
+      { label: 'Security', value: security },
+      { label: 'Decentralization', value: decentralization },
+      { label: 'Regulatory Clarity', value: regulatoryClarity },
     ]
     setRadarData(radarData)
   }
@@ -178,20 +197,39 @@ function App() {
   }
 
   const generateBubbleData = () => {
-    const categories = ['Tech', 'Finance', 'Healthcare', 'Energy', 'Retail']
-    const data = []
+    const cryptocurrencies = [
+      { name: 'Bitcoin', marketCap: 850, volume: 28, category: 'Store of Value' },
+      { name: 'Ethereum', marketCap: 280, volume: 12, category: 'Smart Contracts' },
+      { name: 'Binance Coin', marketCap: 45, volume: 2.1, category: 'Exchange Token' },
+      { name: 'Solana', marketCap: 38, volume: 1.8, category: 'Smart Contracts' },
+      { name: 'Cardano', marketCap: 15, volume: 0.45, category: 'Smart Contracts' },
+      { name: 'XRP', marketCap: 32, volume: 1.2, category: 'Payment' },
+      { name: 'Polkadot', marketCap: 8.5, volume: 0.25, category: 'Interoperability' },
+      { name: 'Dogecoin', marketCap: 12, volume: 0.8, category: 'Meme Coin' },
+      { name: 'Avalanche', marketCap: 6.2, volume: 0.18, category: 'Smart Contracts' },
+      { name: 'Chainlink', marketCap: 4.8, volume: 0.15, category: 'Oracle' },
+      { name: 'Polygon', marketCap: 3.5, volume: 0.12, category: 'Scaling' },
+      { name: 'Litecoin', marketCap: 5.2, volume: 0.22, category: 'Payment' },
+      { name: 'Uniswap', marketCap: 4.1, volume: 0.14, category: 'DeFi' },
+      { name: 'Cosmos', marketCap: 2.8, volume: 0.09, category: 'Interoperability' },
+      { name: 'Algorand', marketCap: 1.9, volume: 0.06, category: 'Smart Contracts' },
+      { name: 'Filecoin', marketCap: 1.2, volume: 0.04, category: 'Storage' },
+      { name: 'Tezos', marketCap: 0.95, volume: 0.03, category: 'Smart Contracts' },
+      { name: 'Aave', marketCap: 1.1, volume: 0.035, category: 'DeFi' },
+      { name: 'Monero', marketCap: 2.1, volume: 0.08, category: 'Privacy' },
+      { name: 'Stellar', marketCap: 2.5, volume: 0.1, category: 'Payment' },
+    ]
     
-    for (let i = 0; i < 30; i++) {
-      const category = categories[Math.floor(Math.random() * categories.length)]
-      const marketCap = Math.random() * 500 + 50
-      const volume = marketCap * (0.1 + Math.random() * 0.2)
-      data.push({
-        x: Math.log10(marketCap),
-        y: Math.log10(volume),
-        size: marketCap / 10,
-        label: category,
-      })
-    }
+    const data = cryptocurrencies.map((crypto) => {
+      return {
+        x: Math.log10(crypto.marketCap),
+        y: Math.log10(crypto.volume),
+        size: Math.sqrt(crypto.marketCap) * 2,
+        label: crypto.category,
+        name: crypto.name,
+      }
+    })
+    
     setBubbleData(data)
   }
 
@@ -200,7 +238,6 @@ function App() {
     const nodes = []
     const links = []
 
-    // Generate nodes
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
         id: `node-${i}`,
@@ -210,7 +247,6 @@ function App() {
       })
     }
 
-    // Generate links (each node connects to 2-4 other nodes)
     nodes.forEach((node, i) => {
       const connectionCount = Math.floor(Math.random() * 3) + 2
       const connections = new Set()
@@ -227,7 +263,6 @@ function App() {
       }
     })
 
-    // Count connections for each node
     nodes.forEach((node) => {
       node.connections = links.filter(
         (link) => link.source === node.id || link.target === node.id
@@ -323,7 +358,6 @@ function App() {
 
   useEffect(() => {
     setLoading(true)
-    // Generate all data synchronously
     generateBarData()
     generateLineData()
     generateScatterData()
@@ -344,7 +378,6 @@ function App() {
 
   const refreshData = () => {
     setLoading(true)
-    // Generate all data synchronously
     generateBarData()
     generateLineData()
     generateScatterData()
@@ -376,67 +409,67 @@ function App() {
 
       <main className="app-main">
         <div className="chart-wrapper">
-          <BarChart data={barData} title="Top Countries by Population (Millions)" />
+          <BarChart data={barData} title="Bar Chart: Top Countries by Population (Millions)" />
         </div>
 
         <div className="chart-wrapper">
-          <LineChart data={lineData} title="Bitcoin Price History (Last 20 Days)" />
+          <LineChart data={lineData} title="Line Chart: Bitcoin Price History (Last 20 Days)" />
         </div>
 
         <div className="chart-wrapper">
-          <ScatterPlot data={scatterData} title="Countries: Area vs Population" />
+          <ScatterPlot data={scatterData} title="Scatter Plot: Countries: Area vs Population" />
         </div>
 
         <div className="chart-wrapper">
-          <PieChart data={pieData} title="Countries by Region" innerRadius={0} />
+          <PieChart data={pieData} title="Pie Chart: Countries by Region" innerRadius={0} />
         </div>
 
         <div className="chart-wrapper">
-          <PieChart data={pieData} title="Countries by Region (Donut)" innerRadius={100} />
+          <PieChart data={pieData} title="Donut Chart: Countries by Region" innerRadius={100} />
         </div>
 
         <div className="chart-wrapper">
-          <Heatmap data={heatmapData} title="Cryptocurrency Price Changes (%)" />
+          <Heatmap data={heatmapData} title="Heatmap: Cryptocurrency Price Changes (%)" />
         </div>
 
         <div className="chart-wrapper">
-          <TreeMap data={treeMapData} title="Top Countries by Area (km²)" />
+          <TreeMap data={treeMapData} title="Tree Map: Technology Market Share by Category" />
         </div>
 
         <div className="chart-wrapper">
-          <TreeDiagram data={treeData} title="Hierarchical Tree Structure" />
+          <TreeDiagram data={treeData} title="Tree Diagram: Hierarchical Tree Structure" />
         </div>
 
         <div className="chart-wrapper">
-          <RadarChart data={radarData} title="Bitcoin Market Metrics" />
+          <RadarChart data={radarData} title="Radar Chart: Bitcoin Market Metrics Performance" />
         </div>
 
         <div className="chart-wrapper">
-          <StackedAreaChart data={stackedAreaData} title="Cryptocurrency Prices Over Time" />
+          <StackedAreaChart data={stackedAreaData} title="Stacked Area Chart: Cryptocurrency Prices Over Time" />
         </div>
 
         <div className="chart-wrapper">
-          <BubbleChart data={bubbleData} title="Cryptocurrencies: Market Cap vs Volume" />
+          <BubbleChart data={bubbleData} title="Bubble Chart: Cryptocurrencies: Market Cap vs Volume" />
         </div>
 
         <div className="chart-wrapper">
-          <ForceGraph data={forceGraphData} title="Network Relationships (Drag to interact!)" />
+          <ForceGraph data={forceGraphData} title="Force-Directed Graph: Network Relationships (Drag to interact!)" />
         </div>
 
         <div className="chart-wrapper">
-          <CandlestickChart data={candlestickData} title="Bitcoin OHLC (Open/High/Low/Close)" />
+          <CandlestickChart data={candlestickData} title="Candlestick Chart: Bitcoin OHLC (Open/High/Low/Close)" />
         </div>
 
         <div className="chart-wrapper">
-          <SankeyDiagram data={sankeyData} title="Population Flow: Regions to Subregions" />
+          <SankeyDiagram data={sankeyData} title="Sankey Diagram: Population Flow: Regions to Subregions" />
         </div>
 
         <div className="chart-wrapper">
-          <SunburstChart data={sunburstData} title="World Population by Region & Subregion" />
+          <SunburstChart data={sunburstData} title="Sunburst Chart: World Population by Region & Subregion" />
         </div>
 
         <div className="chart-wrapper">
-          <BoxPlot data={boxPlotData} title="Population Distribution by Region (Statistics)" />
+          <BoxPlot data={boxPlotData} title="Box Plot: Population Distribution by Region (Statistics)" />
         </div>
       </main>
     </div>
